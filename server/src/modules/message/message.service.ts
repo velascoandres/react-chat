@@ -29,7 +29,9 @@ export class MessageService {
     id: string,
     updateMessageDto: UpdateMessageDto,
   ): Promise<MessageDocument> {
-    return this.messageModel.findByIdAndUpdate(id, updateMessageDto).exec();
+    return this.messageModel
+      .findByIdAndUpdate(id, updateMessageDto, { upsert: false, new: true })
+      .exec();
   }
 
   remove(id: string): Promise<MessageDocument> {
