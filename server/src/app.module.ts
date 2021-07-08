@@ -1,3 +1,4 @@
+import { AuthModule } from './modules/auth/auth.module';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
@@ -15,6 +16,7 @@ import { UserModule } from './modules/user/user.module';
     ),
     UserModule,
     MessageModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
