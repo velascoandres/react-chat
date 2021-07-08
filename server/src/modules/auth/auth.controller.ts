@@ -9,13 +9,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { RegisterUserValidationPipe } from './pipes/register-user.pipe';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register-login')
-  async registerAndLogin(@Body() newUser: CreateUserDto): Promise<TokenUser> {
+  async registerAndLogin(
+    @Body(RegisterUserValidationPipe) newUser: CreateUserDto,
+  ): Promise<TokenUser> {
     try {
       return await this.authService.registerAndLogin(newUser);
     } catch (error) {

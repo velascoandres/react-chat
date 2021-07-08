@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { Message, MessageDocument } from './entities/message.entity';
@@ -17,8 +17,14 @@ export class MessageService {
     return createdMessage.save();
   }
 
-  findAll(): Promise<MessageDocument[]> {
-    return this.messageModel.find().exec();
+  findAll(
+    params: FilterQuery<MessageDocument> = {},
+  ): Promise<MessageDocument[]> {
+    return this.messageModel
+      .find({
+        ...params,
+      })
+      .exec();
   }
 
   findOne(id: string): Promise<MessageDocument> {

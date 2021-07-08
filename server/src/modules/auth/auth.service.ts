@@ -35,8 +35,8 @@ export class AuthService {
     // compare the password hash
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
     if (isPasswordCorrect) {
-      const { online, username, email } = user; // do not select the password
-      return { online, username, email };
+      const { online, username, email, id } = user; // do not select the password
+      return { online, username, email, id };
     }
     return null;
   }
@@ -56,8 +56,8 @@ export class AuthService {
   ): Promise<Pick<UserDocument, 'online' & 'username' & 'email'> | null> {
     const user = await this.userService.findOne({ username });
     if (user) {
-      const { online, username, email } = user;
-      return { online, username, email };
+      const { online, username, email, id } = user;
+      return { online, username, email, id };
     }
     return null;
   }

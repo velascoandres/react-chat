@@ -12,14 +12,14 @@ export class Message {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  from: User;
+  from: User | string;
 
   @Prop({
     required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  to: User;
+  to: User | string;
 
   @Prop({ required: true, type: mongoose.Schema.Types.String })
   text: string;
