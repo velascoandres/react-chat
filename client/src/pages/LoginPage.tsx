@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../auth/AuthContext';
+
+import Swal from 'sweetalert2';
 
 
 type LoginFormState = {
@@ -19,6 +22,24 @@ const initialFormState = {
 export const LoginPage: React.FC = () => {
 
     const [form, setForm] = useState(initialFormState);
+
+    const { login } = useContext(AuthContext);
+
+
+    useEffect(() => {
+
+        const rememberMeEmail = localStorage.getItem('email');
+        if (rememberMeEmail) {
+            setForm(
+                s => ({
+                    ...s,
+                    rememberMe: true,
+                    email: rememberMeEmail,
+                })
+            );
+        }
+    }, []);
+
 
     const onChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = target;
@@ -40,10 +61,28 @@ export const LoginPage: React.FC = () => {
         );
     }
 
-    const onSubmit = (ev: React.FormEvent) => {
+    const onSubmit = async (ev: React.FormEvent) => {
         ev.preventDefault();
-        console.log(form);
+        if (form.rememberMe) {
+            localStorage.setItem('email', form.email);
+        } else {
+            localStorage.removeItem('email');
+        }
+        const { email, password } = form;
+        const ok = await login(email, password);
+        if (!ok) {
+            Swal.fire('Error', 'Incorrect user or password', 'error');
+        } else {
+
+        }
     }
+
+    const isFormValid = (): boolean => {
+        const { email, password } = form;
+        return email.length > 0 && password.length > 0;
+    };
+
+
 
     return (
 
@@ -106,7 +145,11 @@ export const LoginPage: React.FC = () => {
             </div>
 
             <div className="container-login100-form-btn m-t-17">
-                <button className="login100-form-btn">
+                <button 
+                    className="login100-form-btn"
+                    type="submit"
+                    disabled={!isFormValid()}
+                >
                     Ingresar
                 </button>
             </div>
