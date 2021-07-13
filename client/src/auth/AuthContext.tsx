@@ -4,7 +4,7 @@ import { fetchWithOuthToken } from '../helpers/fetch';
 export type AuthContextProps = {
     auth: IAuthState,
     login(email: string, password: string): Promise<boolean>;
-    register(name: string, email: string, password: string): void;
+    register(name: string, email: string, password: string): Promise<boolean>;
     verifyToken(): void;
     logout(): void;
 
@@ -12,7 +12,6 @@ export type AuthContextProps = {
 
 
 const initialAuthContext = {
-    register(name: string, email: string, password: string): void { },
     verifyToken(): void { },
     logout(): void { },
 } as AuthContextProps;
@@ -60,7 +59,11 @@ export const AuthProvider: React.FC<AuthPropviderProps> = ({ children }) => {
     const [auth, setAuth] = useState<IAuthState>(initialAuthState);
 
     const login = async (email: string, password: string) => {
-        const loginResponse = await fetchWithOuthToken<LoginResponse>('auth/login', { email, password }, 'POST');
+        const loginResponse = await fetchWithOuthToken<LoginResponse>(
+            'auth/login',
+            { email, password },
+            'POST',
+        );
         if (loginResponse.ok) {
             const { access_token, refresh_token, user } = loginResponse.data as LoginResponse;
             const { email, id, username } = user;
@@ -87,8 +90,37 @@ export const AuthProvider: React.FC<AuthPropviderProps> = ({ children }) => {
         return loginResponse.ok;
     };
 
-    const register = (name: string, email: string, password: string) => {
-
+    const register = async (username: string, email: string, password: string) => {
+        const registerResponse = await fetchWithOuthToken<LoginResponse>(
+            'auth/register-login',
+            { username, email, password },
+            'POST',
+        );
+        const { ok, data } = registerResponse;
+        if (ok) {
+            const { access_token, refresh_token, user } = data as LoginResponse;
+            const { email, id, username } = user;
+            localStorage.setItem('accessToken', access_token);
+            localStorage.setItem('refreshToken', refresh_token);
+            setAuth(
+                {
+                    email,
+                    checking: false,
+                    id,
+                    username,
+                    logged: true,
+                }
+            );
+        } else {
+            setAuth(
+                {
+                    ...initialAuthState,
+                    checking: true,
+                    logged: false,
+                }
+            );
+        }
+        return ok;
     };
 
     const verifyToken = useCallback(() => {
