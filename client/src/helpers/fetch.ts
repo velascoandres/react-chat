@@ -8,7 +8,18 @@ export type HttpResponse<T = any> = {
 }
 
 
-export const fetchWithOuthToken = async<T = any>(endpoint: string, data?: Record<string, unknown>, method: HttpMethods = 'GET'): Promise<HttpResponse<T>> => {
+export type FetchOptions = {
+    endpoint: string;
+    data?: Record<string, unknown>; 
+    method: HttpMethods;
+    token?: string;
+};
+
+export const customFetch = async<T = any>(
+   options: FetchOptions
+): Promise<HttpResponse<T>> => {
+
+    const {endpoint, method, data, token} = options;
 
     const url = `${baseUrl}/${endpoint}`;
 
@@ -21,6 +32,13 @@ export const fetchWithOuthToken = async<T = any>(endpoint: string, data?: Record
     if (method === 'POST' || method === 'PUT' || method === 'PATCH' ){
         init.headers =  {
             'Content-type': 'application/json',
+        };
+    }
+
+    if (token){
+        init.headers = {
+            ...init.headers,
+            'Authorization': `Bearer ${token}`,
         };
     }
 
@@ -40,4 +58,7 @@ export const fetchWithOuthToken = async<T = any>(endpoint: string, data?: Record
     };
     
 };
+
+
+
 
