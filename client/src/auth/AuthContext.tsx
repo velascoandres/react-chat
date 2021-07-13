@@ -151,7 +151,15 @@ export const AuthProvider: React.FC<AuthPropviderProps> = ({ children }) => {
         }, []);
 
     const logout = () => {
-
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        setAuth(
+            {
+                ...initialAuthState,
+                checking: false,
+                logged: false,
+            }
+        );
     }
 
     const context = {

@@ -1,10 +1,12 @@
 import React, { useContext, useEffect } from 'react'
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom'
 import { ChatPage } from '../pages/ChatPage';
 import { AuthRouter } from './AuthRouter';
 
 import '../css/login-register.css';
 import { AuthContext } from '../auth/AuthContext';
+import { PublicRoute } from './PublicRoute';
+import { PrivateRoute } from './PrivateRoute';
 
 
 export const AppRouter: React.FC = () => {
@@ -24,8 +26,20 @@ export const AppRouter: React.FC = () => {
         <Router>
             <div>
                 <Switch>
-                    <Route path="/auth" component={AuthRouter} />
-                    <Route exact path="/" component={ChatPage} />
+                    {/* <Route path="/auth" component={AuthRouter} /> */}
+                    <PublicRoute
+                        isAuthenticated={logged}
+                        component={AuthRouter}
+                        path='/auth'
+                    />
+                    {/* <Route exact path="/" component={ChatPage} /> */}
+                    <PrivateRoute
+                        exact
+                        path="/"
+                        isAuthenticated={logged}
+                        component={ChatPage}
+                        redirectTo='/auth'
+                    />
                     <Redirect to="/" />
                 </Switch>
             </div>
