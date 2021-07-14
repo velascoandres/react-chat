@@ -5,7 +5,16 @@ import { User } from '../../user/entities/user.entity';
 
 export type MessageDocument = Message & Document;
 
-@Schema({ timestamps: true })
+@Schema({
+  timestamps: true,
+  toJSON: {
+    transform: (doc: MessageDocument, ret) => {
+      delete ret.__v;
+      ret.id = ret._id;
+      delete ret._id;
+    },
+  },
+})
 export class Message {
   @Prop({
     required: true,

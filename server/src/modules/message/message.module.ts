@@ -17,5 +17,6 @@ import { AuthModule } from '../auth/auth.module';
   ],
   controllers: [MessageController],
   providers: [MessageService],
+  exports: [MessageService],
 })
 export class MessageModule {}

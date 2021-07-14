@@ -11,7 +11,7 @@ export interface IMessage {
 
 export interface IChatContext {
     chatState: ChatState;
-    dispatch: React.Dispatch<ChatAction | ListUsers>;
+    dispatch: React.Dispatch<ChatAction>;
 }
 
 

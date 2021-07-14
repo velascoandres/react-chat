@@ -5,14 +5,13 @@ import { AuthContext, IUser } from '../auth/AuthContext';
 
 import { useSocket } from '../hooks/useSocket';
 import { ChatTypes } from '../types/chat.types';
-import { ChatContext } from './chat/ChatContext';
+import { ChatContext, IMessage } from './chat/ChatContext';
+import { ListUsers } from './chat/chatReducer';
 
 
 export interface ISocketContext {
-
     socket: Socket | null;
     online: boolean;
-
 }
 const initialContext = {
     online: false,
@@ -26,9 +25,10 @@ export const SocketContext: React.Context<ISocketContext> = createContext(initia
 export const SocketProvider: React.FC<{ children: JSX.Element }> = ({ children }: { children: JSX.Element }) => {
 
     const { socket, online, disconnectSocket, connectSocket } = useSocket('http://localhost:3002/chat');
-    const { auth } = useContext(AuthContext);
 
+    const { auth } = useContext(AuthContext);
     const { dispatch } = useContext(ChatContext);
+
 
     useEffect(() => {
         if (auth.logged) {
@@ -49,10 +49,17 @@ export const SocketProvider: React.FC<{ children: JSX.Element }> = ({ children }
                 {
                     type: ChatTypes.listUsers,
                     payload: users,
-                }
+                } as ListUsers,
             );
         });
     }, [socket, dispatch]);
+
+    useEffect(() => {
+        socket?.on('private-message', (message: IMessage) => {
+            console.log(message);
+        });
+    }, [socket]);
+
 
     return (
         <SocketContext.Provider value={{ socket, online }}>

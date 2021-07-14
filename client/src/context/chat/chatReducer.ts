@@ -19,6 +19,11 @@ export interface ListUsers extends ChatAction {
     payload: IUser[];
 }
 
+export interface ActiveChat extends ChatAction {
+    type: ChatTypes.activeChat;
+    payload: string;
+}
+
 // export type ChatAction = 
 //     {type: ChatTypes.listUsers; payload: IUser[]} | 
 //     {type: ChatTypes};
@@ -42,6 +47,16 @@ export const chatReducer = (state: ChatState, action: ChatAction): ChatState => 
                 users: [
                     ...(action as ListUsers).payload,
                 ],
+            };
+        case ChatTypes.activeChat:
+            const activeChatAction = (action as ActiveChat);
+
+            if (state.activeChat === activeChatAction.payload) return state; 
+
+            return {
+                ...state,
+                activeChat: activeChatAction.payload,
+                messages: [],
             };
         default:
             return {

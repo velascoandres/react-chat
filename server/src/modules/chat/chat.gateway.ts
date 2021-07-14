@@ -1,3 +1,4 @@
+import { MessageService } from './../message/message.service';
 import { UserService } from './../user/user.service';
 import { WsAuthStrategy } from 'src/modules/auth/strategies/ws-auth.strategy';
 import { UserDocument } from './../user/entities/user.entity';
@@ -11,6 +12,7 @@ import {
 } from '@nestjs/websockets';
 import { getUserFromWSToken } from '../auth/utils/validate-user-ws';
 import { Server, Socket } from 'socket.io';
+import { CreateMessageDto } from '../message/dto/create-message.dto';
 
 interface SocketWithUserData extends Socket {
   user: Partial<UserDocument>;
@@ -24,6 +26,7 @@ export class ChatGateway {
   constructor(
     private readonly wsAuthStrategy: WsAuthStrategy,
     private readonly userService: UserService,
+    private readonly messageService: MessageService,
   ) {}
 
   async handleConnection(socket: SocketWithUserData): Promise<void> {
@@ -42,6 +45,8 @@ export class ChatGateway {
       logger.verbose('Client connected to chat');
       // retrieve connected users
       const connectedUsers = await this.userService.findAll();
+      // join user to a chat room (private)
+      socket.join(updatedUser.id);
       this.server.emit('online-users', connectedUsers);
     } catch (e) {
       logger.error(
@@ -70,12 +75,10 @@ export class ChatGateway {
     }
   }
 
-  @SubscribeMessage('message')
-  handleMessage(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() payload: string,
-  ): string {
-    console.log(client);
-    return 'Hello world!';
+  @SubscribeMessage('private-message')
+  async handleMessage(@MessageBody() message: CreateMessageDto): Promise<void> {
+    const createMessage = await this.messageService.create(message);
+    this.server.to(message.to).emit('private-message', createMessage);
+    this.server.to(message.from).emit('private-message', createMessage);
   }
 }
