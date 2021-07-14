@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AuthContext } from '../auth/AuthContext';
+import { ChatContext } from '../context/chat/ChatContext';
 import { SideBarChatItem } from './SideBarChatItem'
 
 export const SideBar: React.FC = () => {
 
-    const chats = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    const { chatState } = useContext(ChatContext);
+    const { auth } = useContext(AuthContext);
+
+
 
     return (
         <>
@@ -11,7 +16,19 @@ export const SideBar: React.FC = () => {
             <div className="inbox_chat">
 
                 {
-                    chats.map(i => <SideBarChatItem key={i} />)
+                    chatState
+                        .users
+                        .filter(
+                            user => user.id !== auth.id,
+                        )
+                        .map(
+                            user =>
+                            (
+                                <SideBarChatItem
+                                    key={user.id}
+                                    user={user}
+                                />
+                            ))
                 }
 
                 {/* <!-- Espacio extra para scroll --> */}

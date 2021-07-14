@@ -21,6 +21,7 @@ export class UserService {
       .find({
         ...params,
       })
+      .sort('-online')
       .exec();
   }
 

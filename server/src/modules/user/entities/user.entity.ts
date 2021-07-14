@@ -4,7 +4,16 @@ import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
-@Schema()
+@Schema({
+  toJSON: {
+    transform: (doc: UserDocument, ret) => {
+      delete ret.__v;
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.password;
+    },
+  },
+})
 export class User {
   @Prop({ required: true, type: mongoose.Schema.Types.String })
   username: string;

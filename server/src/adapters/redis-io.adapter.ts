@@ -1,5 +1,6 @@
 import { INestApplicationContext, Logger } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
+import { ServerOptions } from 'socket.io';
 import * as redisIoAdapter from 'socket.io-redis';
 import { getUserFromWSToken } from 'src/modules/auth/utils/validate-user-ws';
 import { WsAuthStrategy } from 'src/modules/auth/strategies/ws-auth.strategy';
@@ -14,7 +15,7 @@ export class RedisIoAdapter extends IoAdapter {
     this.wsStrategy = app.get(WsAuthStrategy);
   }
 
-  createIOServer(port: number, options?: any): any {
+  createIOServer(port: number, options?: ServerOptions): any {
     options.allowRequest = async (request, allowFunction) => {
       const logger = new Logger();
       try {
