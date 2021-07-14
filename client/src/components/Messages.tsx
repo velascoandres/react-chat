@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import { SendMessage } from './SendMessage'
 import { OutgoingMessage } from './OutgoingMessage'
 import { IncomingMessage } from './IncomingMessage'
+import { AuthContext } from '../auth/AuthContext'
+import { ChatContext } from '../context/chat/ChatContext'
+
 
 export const Messages: React.FC = () => {
 
-    const msgs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    const { auth } = useContext(AuthContext);
+    const { chatState } = useContext(ChatContext);
 
     return (
         <>
@@ -18,8 +22,10 @@ export const Messages: React.FC = () => {
 
                     {
 
-                        msgs.map(
-                            (msg) => msg % 2 ? <OutgoingMessage key={msg} /> : <IncomingMessage key={msg} />
+                        chatState.messages.map(
+                            (msg) => (msg.to !== auth.id)
+                                ? <OutgoingMessage key={msg.id} message={msg} />
+                                : <IncomingMessage key={msg.id} message={msg} />
 
                         )
 

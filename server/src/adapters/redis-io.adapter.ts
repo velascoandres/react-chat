@@ -23,7 +23,6 @@ export class RedisIoAdapter extends IoAdapter {
         logger.verbose(`Authenticated client`);
         return allowFunction(null, true);
       } catch (e) {
-        console.log(e);
         logger.error('WS Unauthorized');
         return allowFunction('Unauthorized', false);
       }

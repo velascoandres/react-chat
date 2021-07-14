@@ -24,9 +24,10 @@ export interface ActiveChat extends ChatAction {
     payload: string;
 }
 
-// export type ChatAction = 
-//     {type: ChatTypes.listUsers; payload: IUser[]} | 
-//     {type: ChatTypes};
+export interface NewMessage extends ChatAction {
+    type: ChatTypes.newMessage;
+    payload: IMessage;
+}
 
 
 export const initialChatState = {
@@ -58,6 +59,23 @@ export const chatReducer = (state: ChatState, action: ChatAction): ChatState => 
                 activeChat: activeChatAction.payload,
                 messages: [],
             };
+        case ChatTypes.newMessage:
+            const newMessageAction = (action as NewMessage);
+
+            if (state.activeChat === newMessageAction.payload.from ||
+                state.activeChat === newMessageAction.payload.to
+                ) {
+                    return {
+                        ...state,
+                        messages: [
+                            ...state.messages,
+                            newMessageAction.payload,
+                        ],
+                    };        
+                } else {
+                    return state;
+                }
+        
         default:
             return {
                 ...initialChatState,

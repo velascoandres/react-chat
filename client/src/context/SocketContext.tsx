@@ -6,7 +6,7 @@ import { AuthContext, IUser } from '../auth/AuthContext';
 import { useSocket } from '../hooks/useSocket';
 import { ChatTypes } from '../types/chat.types';
 import { ChatContext, IMessage } from './chat/ChatContext';
-import { ListUsers } from './chat/chatReducer';
+import { ListUsers, NewMessage } from './chat/chatReducer';
 
 
 export interface ISocketContext {
@@ -56,9 +56,16 @@ export const SocketProvider: React.FC<{ children: JSX.Element }> = ({ children }
 
     useEffect(() => {
         socket?.on('private-message', (message: IMessage) => {
-            console.log(message);
+
+            const newMessage = {
+                type: ChatTypes.newMessage,
+                payload: message,
+            } as NewMessage;
+
+            dispatch(newMessage);
+            // TODO: move scroll to final
         });
-    }, [socket]);
+    }, [socket, dispatch]);
 
 
     return (

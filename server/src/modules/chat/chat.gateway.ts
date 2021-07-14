@@ -4,7 +4,6 @@ import { WsAuthStrategy } from 'src/modules/auth/strategies/ws-auth.strategy';
 import { UserDocument } from './../user/entities/user.entity';
 import { Logger } from '@nestjs/common';
 import {
-  ConnectedSocket,
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,

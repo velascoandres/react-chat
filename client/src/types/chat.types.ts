@@ -1,4 +1,5 @@
 export enum ChatTypes {
     listUsers = '[Chat] list users',  
-    activeChat = '[Chat] Active Chat' 
+    activeChat = '[Chat] Active Chat', 
+    newMessage = '[Chat] New Message', 
 }
