@@ -34,6 +34,11 @@ export interface LoadMessages extends ChatAction {
     payload: IMessage[];
 }
 
+export interface Clean extends ChatAction {
+    type: ChatTypes.clean;
+}
+
+
 
 export const initialChatState = {
     id: '',
@@ -96,6 +101,11 @@ export const chatReducer = (state: ChatState, action: ChatAction): ChatState => 
                     ...loadMessagesAction.payload,
                 ],
             };
+        
+        case ChatTypes.clean:
+            return {
+                ...initialChatState,
+            }
 
         default:
             return {

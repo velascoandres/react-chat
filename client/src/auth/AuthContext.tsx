@@ -1,5 +1,7 @@
-import { createContext, useCallback, useState } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
+import { ChatContext } from '../context/chat/ChatContext';
 import { customFetch, HttpResponse } from '../helpers/fetch';
+import { ChatTypes } from '../types/chat.types';
 
 export type AuthContextProps = {
     auth: IAuthState,
@@ -56,6 +58,9 @@ type AuthPropviderProps = { children: JSX.Element };
 export const AuthProvider: React.FC<AuthPropviderProps> = ({ children }) => {
 
     const [auth, setAuth] = useState<IAuthState>(initialAuthState);
+
+    const { dispatch } = useContext(ChatContext);
+
 
     const login = async (email: string, password: string) => {
         const loginResponse = await customFetch<LoginResponse>(
@@ -160,6 +165,7 @@ export const AuthProvider: React.FC<AuthPropviderProps> = ({ children }) => {
                 logged: false,
             }
         );
+        dispatch({ type: ChatTypes.clean });
     }
 
     const context = {
