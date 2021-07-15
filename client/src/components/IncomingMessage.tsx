@@ -1,5 +1,6 @@
 import React from 'react'
 import { IMessage } from '../context/chat/ChatContext'
+import { horaMes } from '../helpers/horaMes'
 
 export type IncomingMessageProps = {
     message: IMessage;
@@ -8,7 +9,7 @@ export type IncomingMessageProps = {
 
 export const IncomingMessage: React.FC<IncomingMessageProps> = ({ message }) => {
 
-    
+
 
     return (
         <>
@@ -19,7 +20,7 @@ export const IncomingMessage: React.FC<IncomingMessageProps> = ({ message }) => 
                 <div className="received_msg">
                     <div className="received_withd_msg">
                         <p>{message.text}</p>
-                        <span className="time_date"> 11:01 AM | June 9</span>
+                        <span className="time_date">{horaMes(message.createdAt as string)}</span>
                     </div>
                 </div>
             </div>
