@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect } from 'react';
 
 import { Socket } from 'socket.io-client';
 import { AuthContext, IUser } from '../auth/AuthContext';
+import { scrollToBottomAnimated } from '../helpers/scrollToBottom';
 
 import { useSocket } from '../hooks/useSocket';
 import { ChatTypes } from '../types/chat.types';
@@ -63,7 +64,8 @@ export const SocketProvider: React.FC<{ children: JSX.Element }> = ({ children }
             } as NewMessage;
 
             dispatch(newMessage);
-            // TODO: move scroll to final
+            // Move scroll to final
+            scrollToBottomAnimated('messages');
         });
     }, [socket, dispatch]);
 

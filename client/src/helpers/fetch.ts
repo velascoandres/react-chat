@@ -44,8 +44,10 @@ export const customFetch = async<T = any>(
 
     init.body = JSON.stringify(data);
     
+
     const resp = await fetch(url, init);
-    if (resp.status !== 201){
+
+    if (resp.status >= 210){
         return {
             ok: false,
         }

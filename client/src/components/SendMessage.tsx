@@ -30,7 +30,6 @@ export const SendMessage: React.FC = () => {
         } as IMessage;
         // Emit a websocket
         socket?.emit('private-message', messageToSend);
-        // TODO: dispatch new message to reducer
         
         setMessage('');
     }

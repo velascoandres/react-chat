@@ -24,12 +24,17 @@ export class MessageController {
     return this.messageService.create(createMessageDto);
   }
 
-  @Get('from/:from')
+  @Get('history/:targetUser')
   findMessages(
     @Req() { user }: { user: UserDocument },
-    @Param('from') from: string,
+    @Param('targetUser') targetUser: string,
   ) {
-    return this.messageService.findAll({ from, to: user.id });
+    return this.messageService.findAll({
+      $or: [
+        { from: targetUser, to: user.id },
+        { from: user.id, to: targetUser },
+      ],
+    });
   }
 
   @Delete(':id')

@@ -23,6 +23,28 @@ export const SideBarChatItem: React.FC<SideBarChatItemProps> = ({ user }: SideBa
             type: ChatTypes.activeChat,
         };
         dispatch(action);
+
+        // This code was commented because I have to  do a click two times to load messages
+        // This logic was move to Messages component
+        // const response = await customFetch<IMessage[]>(
+        //     {
+        //         endpoint: `message/history/${activeChat}`,
+        //         method: 'GET',
+        //         token: localStorage.getItem('accessToken') ?? '',
+        //     }
+        // );
+
+        // if (response.ok) {
+
+        //     const loadAction = {
+        //         type: ChatTypes.loadMessages,
+        //         payload: response.data ?? [],
+        //     } as LoadMessages;
+
+        //     dispatch(loadAction);
+
+        // }
+
     }
 
 

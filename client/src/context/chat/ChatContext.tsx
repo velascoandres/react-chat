@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from 'react'
-import { ChatAction, chatReducer, ChatState, initialChatState, ListUsers } from './chatReducer';
+import { ChatAction, chatReducer, ChatState, initialChatState } from './chatReducer';
 
 
 export interface IMessage {
